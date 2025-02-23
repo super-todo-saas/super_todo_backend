@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTodoDto } from 'src/modules/todos/dto/create-todo.dto';
-import { UpdateTodoDto } from 'src/modules/todos/dto/update-todo.dto';
 import { Todo } from 'src/modules/todos/interfaces/todo';
 
 @Injectable()
@@ -11,22 +10,30 @@ export class InMemoryDatabaseService {
     return this.todos;
   }
 
-  create(todo: CreateTodoDto): Todo {
+  create(data: CreateTodoDto): Todo {
     const id = this.todos.length;
     const newTodo: Todo = {
       id,
+      title: data?.title ?? '',
+      notes: data?.userRole === 'paid' ? data?.notes : undefined,
+      completed: data?.completed ?? false,
       createdAt: new Date().toISOString(),
-      completed: todo?.completed ?? false,
-      ...todo,
     };
     this.todos.push(newTodo);
     return newTodo;
   }
 
-  update(id: number, updatedTodo: UpdateTodoDto): Todo | null {
+  update(id: number, data: CreateTodoDto): Todo | null {
     const index = this.todos.findIndex((item) => item.id === id);
     if (index !== -1) {
-      this.todos[index] = { ...this.todos[index], ...updatedTodo };
+      const newTodoTitle = (data?.title ?? '').trim();
+      this.todos[index] = {
+        ...this.todos[index],
+        title:
+          newTodoTitle?.length > 0 ? newTodoTitle : this.todos[index].title,
+        notes: data?.userRole === 'paid' ? data?.notes : undefined,
+        completed: data?.completed ?? false,
+      };
       return this.todos[index];
     }
     return null;

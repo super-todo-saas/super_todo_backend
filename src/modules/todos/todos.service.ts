@@ -7,7 +7,6 @@ import {
 import { InMemoryDatabaseService } from 'src/modules/databases/in-memory-database.service';
 import { Todo } from './interfaces/todo';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @Injectable()
 export class TodosService {
@@ -21,17 +20,17 @@ export class TodosService {
     }
   }
 
-  async create(todo: CreateTodoDto): Promise<Todo> {
+  async create(data: CreateTodoDto): Promise<Todo> {
     try {
-      return this.dbService.create(todo);
+      return this.dbService.create(data);
     } catch {
-      throw new InternalServerErrorException('Create todos failed');
+      throw new InternalServerErrorException('Create todo failed');
     }
   }
 
-  async update(todo: UpdateTodoDto): Promise<Todo> {
+  async update(id: number, todo: CreateTodoDto): Promise<Todo> {
     try {
-      const updatedTodo = this.dbService.update(todo.id, todo);
+      const updatedTodo = this.dbService.update(id, todo);
 
       if (updatedTodo) {
         return updatedTodo;
@@ -57,7 +56,7 @@ export class TodosService {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new InternalServerErrorException('Delete todos failed');
+      throw new InternalServerErrorException('Delete todo failed');
     }
   }
 }
