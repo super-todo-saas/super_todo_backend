@@ -1,13 +1,13 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
 FROM node:22-alpine AS runner
 WORKDIR /app

@@ -17,7 +17,12 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: ['https://super-todo-saas.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
 
   const serverPort = process.env.PORT ?? 3000;
   await app.listen(serverPort);
