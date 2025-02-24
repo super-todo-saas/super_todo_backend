@@ -2,6 +2,7 @@ services:
   backend:
     build: .
     ports:
-      - '8000:8000'
+      - '${PORT}:${PORT}'
     environment:
-      NODE_ENV: production
+      - NODE_ENV = production
+      - PORT=${PORT}
